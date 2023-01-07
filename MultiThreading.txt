@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include<string.h>
+int g = 0;
+char fname[100],string[100];
+char line[500];
+void *myThreadFun(void *vargp)
+{
+int line_no = 0;
+FILE *f = fopen(fname,"r");
+while(fgets(line, sizeof(line), f))
+{
+line_no++;
+if(strstr(line, string)!=0) {//if match found
+printf("Found the word %s in the file in %d line at %d column\n",string,line_no,(strstr(line, string) - line));
+exit(0);
+}
+}
+}
+int main(int argc, char *argv[])
+{
+int i,n;
+pthread_t tid;
+n=atoi(argv[3]);
+strcat(fname,argv[1]);
+strcat(string,argv[2]);
+for (i = 0; i < n; i++)
+pthread_create(&tid, NULL, myThreadFun, (void *)&tid);
+pthread_exit(NULL);
+return 0;
+}
